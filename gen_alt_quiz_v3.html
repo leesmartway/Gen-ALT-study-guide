@@ -1,0 +1,244 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+#qw{padding:1rem 0}
+.hdr h2{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.hdr p{font-size:13px;color:var(--color-text-secondary);margin-top:4px;margin-bottom:12px}
+.pbg{height:4px;background:var(--color-background-secondary);border-radius:2px;margin:8px 0 12px}
+.pfill{height:4px;background:#1D9E75;border-radius:2px;transition:width .3s}
+.stats{display:flex;gap:10px;margin-bottom:1.25rem}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 14px;font-size:13px;color:var(--color-text-secondary);text-align:center}
+.stat strong{display:block;font-size:17px;font-weight:500;color:var(--color-text-primary)}
+.qcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.qnum{font-size:12px;color:var(--color-text-tertiary);margin-bottom:6px}
+.qtext{font-size:15px;color:var(--color-text-primary);line-height:1.5;margin-bottom:1rem}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);cursor:pointer;font-size:14px;color:var(--color-text-primary);line-height:1.4;background:var(--color-background-primary)}
+.opt:hover{background:var(--color-background-secondary)}
+.opt.cor{background:#EAF3DE;border-color:#639922;color:#27500A;cursor:default}
+.opt.wrn{background:#FCEBEB;border-color:#A32D2D;color:#501313;cursor:default}
+.opt.dim{cursor:default;opacity:.6}
+.oltr{font-weight:500;flex-shrink:0;width:16px}
+.fb{font-size:13px;margin-top:10px;padding:8px 10px;border-radius:var(--border-radius-md);line-height:1.5}
+.fb.cor{background:#EAF3DE;color:#3B6D11}
+.fb.wrn{background:#FCEBEB;color:#A32D2D}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:.75rem}
+.nav button{padding:8px 18px;font-size:14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-primary);cursor:pointer}
+.nav button:hover{background:var(--color-background-secondary)}
+.nav button:disabled{opacity:.35;cursor:default}
+.dots{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1rem}
+.dot{width:18px;height:18px;border-radius:3px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--color-text-tertiary)}
+.dot.c{background:#EAF3DE;border-color:#639922;color:#27500A}
+.dot.w{background:#FCEBEB;border-color:#A32D2D;color:#A32D2D}
+.dot.cur{outline:2px solid #1D9E75;outline-offset:1px}
+.res{text-align:center;padding:2rem 1rem}
+.res .sc{font-size:48px;font-weight:500;color:var(--color-text-primary)}
+.res .lb{font-size:14px;color:var(--color-text-secondary);margin-top:4px}
+.res .gr{font-size:17px;font-weight:500;margin:1rem 0;color:#1D9E75}
+</style>
+<div id="qw">
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Generator and Alternator 32-question quiz</h2>
+<div class="hdr"><h2>Generator &amp; Alternator Quiz</h2><p>32 questions from your FAA textbook</p></div>
+<div id="dots" class="dots"></div>
+<div class="pbg"><div class="pfill" id="pf"></div></div>
+<div class="stats">
+<div class="stat"><strong id="sc">1</strong>of 32</div>
+<div class="stat"><strong id="sk">0</strong>correct</div>
+<div class="stat"><strong id="sp">0%</strong>score</div>
+</div>
+<div id="qa"></div>
+<div class="nav">
+<button id="bp" onclick="go(-1)" disabled>← Prev</button>
+<span id="nl" style="font-size:13px;color:var(--color-text-secondary)"></span>
+<button id="bn" onclick="go(1)" disabled>Next →</button>
+</div>
+<div id="ra"></div>
+</div>
+<script>
+// Each question: opts array, ans = INDEX of correct answer (0=A,1=B,2=C,3=D)
+// Distribution: Q1-8 ans=0(A), Q9-16 ans=1(B), Q17-24 ans=2(C), Q25-32 ans=3(D)
+// Correct answer text is physically placed at that index in the opts array.
+const Q=[
+// ── 8 × A (ans=0) ──────────────────────────────────────────────────
+{q:"What are the three major assemblies of a typical aircraft DC generator?",
+ opts:["Field frame (yoke), rotating armature, and brush assembly","Rotor, stator, and end frame","Commutator, slip rings, and pole pieces","Armature core, interpoles, and shunt field"],
+ ans:0, exp:"The major parts of a DC generator are the field frame (yoke), a rotating armature, and a brush assembly."},
+
+{q:"Armature reaction in a DC generator is caused by:",
+ opts:["Armature current creating electromagnetic fields that distort the main magnetic flux","Excessive brush pressure scoring the commutator surface","Overheating of the field coils under heavy electrical load","Eddy currents flowing in the laminated pole pieces"],
+ ans:0, exp:"Current through armature windings sets up new electromagnetic fields that distort or bend the main flux between poles — this is called armature reaction."},
+
+{q:"Compensating windings embedded in the pole faces are used to:",
+ opts:["Counteract the armature magnetic field and keep the neutral plane stationary under all loads","Boost output voltage when the aircraft electrical load increases","Provide a backup flux path when field coils overheat","Cool the pole faces during high-current operation"],
+ ans:0, exp:"Compensating windings carry armature current and produce a field opposing the armature field, neutralizing distortion and keeping the neutral plane fixed."},
+
+{q:"The 'coming in' speed of most aircraft DC generators is approximately:",
+ opts:["1,500 rpm","800 rpm","3,600 rpm","6,000 rpm"],
+ ans:0, exp:"Most aircraft generators begin producing their normal rated voltage at approximately 1,500 rpm, termed the 'coming in' speed."},
+
+{q:"To reverse the direction of a DC motor you must:",
+ opts:["Reverse current through either the armature OR the field windings — but not both at the same time","Interchange both external supply leads coming from the battery","Increase field current until the motor stops, then reapply power","Shift the brushes past the neutral plane in the opposite direction"],
+ ans:0, exp:"Reversing only the armature or only the field reverses rotation. Reversing both leaves torque direction unchanged because both magnetisms flip together."},
+
+{q:"The purpose of the reverse current cutout relay in a three-unit regulator is to:",
+ opts:["Disconnect the battery from the generator when generator voltage falls below battery voltage, preventing the battery from motoring the generator","Limit generator field current when output exceeds rated voltage","Insert resistance into the armature circuit at engine start to limit surge current","Protect against short circuits in the external load wiring"],
+ ans:0, exp:"Without the reverse current cutout, the battery would discharge back through the generator armature, driving it as a motor and quickly discharging the battery."},
+
+{q:"In a DC alternator (alternator-rectifier unit), the three-phase AC output of the armature windings is converted to DC by:",
+ opts:["A three-phase full-wave bridge rectifier assembly made up of six diodes","A commutator and brush arrangement identical to a standard DC generator","Slip rings connected through a carbon pile voltage regulator","A magnetic amplifier that smooths the pulsating AC waveform"],
+ ans:0, exp:"DC alternators replace the commutator with a six-diode three-phase full-wave bridge rectifier, which is more efficient and requires less maintenance."},
+
+{q:"When the Generator Control Unit (GCU) detects an overvoltage condition, it responds by:",
+ opts:["Opening the relay that controls field excitation, collapsing the generator field and reducing output voltage","Sounding a cockpit warning only and waiting for pilot action","Connecting a resistor bank across the bus to absorb excess voltage","Disconnecting all non-essential bus loads automatically"],
+ ans:0, exp:"The GCU overvoltage circuit opens the field excitation relay, cutting field current and bringing generator output back within limits."},
+
+// ── 8 × B (ans=1) ──────────────────────────────────────────────────
+{q:"In a basic DC generator, the commutator replaces the slip rings of an AC generator in order to:",
+ opts:["Reduce internal resistance and improve efficiency at high RPM","Cause current to always flow in the same direction through the external circuit, producing DC","Allow the armature to rotate at higher speeds without brush wear","Provide a path for exciting current to reach the field coils"],
+ ans:1, exp:"By switching which brush contacts which coil side at the right moment, the commutator ensures external current always flows in one direction — producing DC."},
+
+{q:"Generator output voltage is at maximum when the armature loop conductor is:",
+ opts:["Passing through the neutral plane where induced EMF is zero","Perpendicular to the magnetic field lines, cutting them at 90°","Parallel to the magnetic field lines","Positioned at 45° relative to the pole faces"],
+ ans:1, exp:"Voltage is maximum when conductors cut magnetic lines of force at right angles — the highest possible rate of flux cutting per unit time."},
+
+{q:"Drum-type armatures wound with wave winding are designed for generators that must produce:",
+ opts:["High current output using many parallel brush sets","High voltage output, because coil ends connect in series so all induced voltages add together","Low-ripple output at very low rotational speeds","Constant voltage independent of armature speed variation"],
+ ans:1, exp:"Wave winding places coils in series (ends connected to segments separated by the pole pitch), so their voltages add — ideal for high-voltage generators."},
+
+{q:"In a shunt-wound DC generator, what happens to terminal voltage when the electrical load increases?",
+ opts:["Voltage increases because the parallel field draws more current from the bus","Terminal voltage decreases due to the increased IR drop in the armature winding","Voltage remains constant because the field is connected directly across the armature","Voltage rises to field saturation then drops sharply"],
+ ans:1, exp:"More load current means a larger armature IR drop, reducing terminal voltage. The weaker terminal voltage also reduces field current, further dropping output."},
+
+{q:"Brushes on a DC generator or motor should exert what contact pressure on the commutator surface?",
+ opts:["0.5 to 1 psi — any more causes rapid commutator wear","1½ to 2½ psi — too much causes rapid wear, too little causes bouncing and arcing","3 to 5 psi — required for good electrical contact under load","6 to 8 psi — necessary at high altitude to overcome reduced air density"],
+ ans:1, exp:"The book specifies 1½ to 2½ psi. Excessive pressure causes rapid brush wear; too little allows bouncing, resulting in burned and pitted surfaces."},
+
+{q:"The major difference between an AC alternator and a DC generator in terms of how they connect to the external circuit is:",
+ opts:["The alternator uses a multi-segment commutator; the DC generator uses two slip rings","The alternator connects via slip rings; the DC generator connects via a commutator","The alternator has no brushes whatsoever; the DC generator has four brush sets","The alternator output is rectified internally; the DC generator output is pure AC"],
+ ans:1, exp:"Slip rings pass the generated AC voltage unchanged to the external circuit (alternator). A commutator rectifies the AC to DC internally (DC generator)."},
+
+{q:"In a wye (Y) connected three-phase alternator with balanced loads, line voltage compared to phase voltage is:",
+ opts:["Equal to phase voltage (1.0 ×)","Approximately 1.73 times the phase voltage (√3 ×)","Approximately 0.577 times the phase voltage (1/√3 ×)","Exactly 3 times the phase voltage"],
+ ans:1, exp:"In a balanced wye system, line voltage = √3 × phase voltage ≈ 1.73 × phase voltage, because each line spans two phase windings as vectors."},
+
+{q:"In a brushless alternator, the need for brushes is eliminated because:",
+ opts:["The main field is a permanent magnet that requires no external excitation current","The exciter armature (mounted on the rotor) produces AC that is rectified by shaft-mounted silicon diodes and fed directly to the main rotating field","The stator carries all current and the rotor rotates freely with no electrical connections","Voltage regulation is handled externally so no field current is needed inside the machine"],
+ ans:1, exp:"Shaft-mounted silicon rectifiers convert the exciter's AC output to DC and feed it to the main rotating field — eliminating all brush-to-slip-ring contact."},
+
+{q:"A series DC motor differs from a shunt motor in that under no-load conditions the series motor:",
+ opts:["Operates at a safe governed speed set by the field resistance","May accelerate to dangerously high speed because reduced current weakens both the field and the back EMF simultaneously","Draws maximum current and produces maximum torque","Stops automatically due to insufficient field flux to sustain rotation"],
+ ans:1, exp:"With no load the series motor draws very little current, drastically weakening both field and counter EMF, allowing runaway acceleration that can destroy the armature."},
+
+// ── 8 × C (ans=2) ──────────────────────────────────────────────────
+{q:"Voltage 'ripple' in the DC output of a basic single-loop generator is best reduced by:",
+ opts:["Using heavier carbon brushes with lower contact resistance","Increasing field current to raise average output voltage","Adding more armature loops and commutator segments to smooth the output waveform","Decreasing armature speed to reduce the frequency of voltage pulsations"],
+ ans:2, exp:"Additional coils reduce variation between maximum and minimum voltage values, bringing output closer to a steady DC level with each added loop."},
+
+{q:"The main advantage of the drum-type armature over the Gramme-ring (ring-type) armature is:",
+ opts:["It uses fewer commutator segments for any given number of coils","It is lighter because the iron core is hollow","Each winding completely surrounds the core so the entire conductor length cuts the magnetic flux, producing much higher induced voltage","It has lower armature resistance due to shorter conductor paths between commutator segments"],
+ ans:2, exp:"In a drum-type armature every winding surrounds the core, so the full conductor length cuts through the magnetic flux — producing far greater voltage than the ring type."},
+
+{q:"An over-compound DC generator is one where:",
+ opts:["The series field opposes the shunt field, causing voltage to drop as load increases","No-load voltage and full-load voltage are equal (flat compounding)","Full-load output voltage is higher than no-load voltage due to the strong cumulative series field","Full-load voltage is slightly lower than no-load voltage (under-compounding)"],
+ ans:2, exp:"An over-compound generator's cumulative series field more than compensates for armature IR drop at full load, so full-load voltage exceeds no-load voltage."},
+
+{q:"The correct method for seating a generator brush that does not make full contact with the commutator is:",
+ opts:["Polish the commutator with emery cloth, then reinstall the brush","Increase spring tension above the manufacturer's limit until full face contact is achieved","Pull No. 000 sandpaper rough-side-against-the-brush in the direction of armature rotation only","Heat the brush with a heat gun until it conforms to the commutator radius"],
+ ans:2, exp:"No. 000 or finer sandpaper is pulled in the direction of rotation only. Emery cloth is prohibited because it contains conductive particles that cause arcing."},
+
+{q:"A DC series motor is most commonly used on aircraft for systems such as engine starters and landing gear actuators because it provides:",
+ opts:["Nearly constant speed regardless of load variation","Precise speed control through a simple field rheostat","High starting torque under heavy load conditions","Low starting current that protects the aircraft bus during engagement"],
+ ans:2, exp:"Series motors deliver very high starting torque under heavy loads because starting current flows through both field and armature, maximizing magnetic force on both."},
+
+{q:"'High mica' on a generator or motor commutator describes a condition where:",
+ opts:["Copper bars have worn below the mica insulation, causing the brushes to contact only mica","Mica insulation has cracked and separated from the commutator bars","Mica insulation protrudes above the surface of the copper commutator bars, preventing good brush contact","Mica has absorbed oil and become electrically conductive, causing inter-bar shorts"],
+ ans:2, exp:"High mica occurs when mica wears more slowly than copper, leaving protruding mica ridges that lift the brushes off the copper bars and prevent good electrical contact."},
+
+{q:"A 12-pole AC alternator spinning at 4,000 rpm produces an output frequency of:",
+ opts:["200 Hz","300 Hz","400 Hz","600 Hz"],
+ ans:2, exp:"F = (P × N) ÷ 120 = (12 × 4,000) ÷ 120 = 48,000 ÷ 120 = 400 Hz."},
+
+{q:"The Constant Speed Drive (CSD) installed between an aircraft engine and an AC alternator is necessary because:",
+ opts:["It steps down high engine torque to protect the alternator drive shaft from overload","It regulates alternator output voltage by mechanically varying field air gap","Alternator output frequency must stay at 400 Hz, requiring constant alternator speed regardless of engine RPM changes","It provides an emergency mechanical disconnect if the alternator seizes in flight"],
+ ans:2, exp:"Aircraft AC electrical equipment is frequency-sensitive (designed for 400 Hz). The CSD keeps alternator RPM — and therefore output frequency — constant across the engine's operating speed range."},
+
+// ── 8 × D (ans=3) ──────────────────────────────────────────────────
+{q:"In a DC generator, the rotating coil and commutator together are collectively called the:",
+ opts:["Field assembly","Stator","Yoke","Armature"],
+ ans:3, exp:"The rotating parts of a DC generator — the coil windings and the commutator — are collectively called the armature."},
+
+{q:"The neutral plane in a DC generator is defined as the position where:",
+ opts:["Armature conductors move fastest and cut the most lines of force","Brush contact resistance is at its minimum value","Magnetic flux density between the pole faces is greatest","The plane of the shorted coil is perpendicular to the magnetic field and induced EMF in the shorted coil is zero"],
+ ans:3, exp:"At the neutral plane the brushes short two commutator segments at the exact instant that the coil's induced EMF is zero, preventing arcing and commutator damage."},
+
+{q:"In a three-phase delta-connected alternator, the relationship between line current and phase current (with balanced loads) is:",
+ opts:["Line current equals the phase current","Line current equals 0.577 times the phase current","Line current equals the phase voltage divided by load impedance","Line current equals approximately 1.73 times the phase current"],
+ ans:3, exp:"In a balanced delta connection, line current = √3 × phase current ≈ 1.73 × phase current. (Unlike wye, delta line voltage equals phase voltage.)"},
+
+{q:"As a DC motor armature accelerates from rest to running speed, armature current:",
+ opts:["Remains constant because supply voltage does not change","Rises steadily in proportion to mechanical speed","Surges and stays high until the thermal cutout opens","Starts very high then decreases as counter EMF builds up and opposes the applied voltage"],
+ ans:3, exp:"At start there is no counter EMF, so only armature resistance limits current (very high). As speed rises, counter EMF increases and opposes supply voltage, reducing current to normal."},
+
+{q:"In a DC shunt motor, increasing the rheostat resistance in series with the field winding causes the motor to:",
+ opts:["Slow down as the weakened field produces less torque per ampere","Maintain the same speed because the armature is connected directly across the supply","Stop and reverse direction due to the sudden field polarity change","Speed up because reduced field current lowers counter EMF, momentarily increasing armature current and torque"],
+ ans:3, exp:"Less field current → weaker field → less counter EMF → more armature current and torque → motor accelerates to a new, higher steady-state speed."},
+
+{q:"Which type of DC motor is best described as having nearly constant speed under varying load and low starting torque compared to the series type?",
+ opts:["Series motor","Compound cumulative motor","Differential compound motor","Shunt motor"],
+ ans:3, exp:"The shunt motor field is connected directly across the supply and stays nearly constant, giving almost constant speed. Its starting torque is lower than that of a series motor."},
+
+{q:"On large aircraft AC alternator systems, the unit that manages distribution of AC power to buses throughout the aircraft — working alongside the GCU — is called the:",
+ opts:["Alternator Control Unit (ACU)","Constant Speed Drive governor (CSD)","Differential relay switch","Bus Power Control Unit (BPCU)"],
+ ans:3, exp:"The BPCU manages AC power distribution to buses throughout the aircraft. The GCU monitors and controls each individual alternator; both units work together."},
+
+{q:"In a three-unit voltage regulator for a DC generator system, the current limiter unit protects the generator by:",
+ opts:["Opening the field circuit completely whenever load current exceeds 110% of rated value","Vibrating contact C1 to insert and remove the field rheostat based on bus voltage level","Disconnecting the battery from the bus during high-load transients","Vibrating contact C2 to insert resistance R2 into the field circuit when line current exceeds the rated maximum, reducing generator output"],
+ ans:3, exp:"When line current through coil L3 exceeds the rated value, it opens contact C2, inserting R2 into the field circuit, reducing field current, generated voltage, and therefore output current."}
+];
+
+let cur=0, ans=new Array(32).fill(null);
+
+function dots(){
+  document.getElementById('dots').innerHTML=Q.map((q,i)=>{
+    let c='dot';
+    if(i===cur)c+=' cur';
+    else if(ans[i]!==null)c+=ans[i]===Q[i].ans?' c':' w';
+    return `<div class="${c}" onclick="jmp(${i})">${i+1}</div>`;
+  }).join('');
+}
+
+function render(){
+  const q=Q[cur], done=ans[cur]!==null, L=['A','B','C','D'];
+  const opts=q.opts.map((o,i)=>{
+    let c='opt';
+    if(done){c+=i===q.ans?' cor':i===ans[cur]?' wrn':' dim';}
+    return `<div class="${c}" onclick="pick(${i})"><span class="oltr">${L[i]}</span><span>${o}</span></div>`;
+  }).join('');
+  const fb=done?`<div class="fb ${ans[cur]===q.ans?'cor':'wrn'}">${ans[cur]===q.ans?'Correct! ':'Incorrect. '}${q.exp}</div>`:'';
+  document.getElementById('qa').innerHTML=`<div class="qcard"><div class="qnum">Question ${cur+1} of 32</div><div class="qtext">${q.q}</div><div class="opts">${opts}</div>${fb}</div>`;
+  const tot=ans.filter(a=>a!==null).length, cor=ans.filter((a,i)=>a===Q[i].ans).length;
+  document.getElementById('pf').style.width=(tot/32*100)+'%';
+  document.getElementById('sc').textContent=cur+1;
+  document.getElementById('sk').textContent=cor;
+  document.getElementById('sp').textContent=tot?Math.round(cor/tot*100)+'%':'0%';
+  document.getElementById('bp').disabled=cur===0;
+  document.getElementById('bn').disabled=cur===31;
+  document.getElementById('nl').textContent=tot+'/32 answered';
+  dots();
+  if(tot===32&&!document.getElementById('ra').innerHTML)results();
+}
+
+function pick(i){if(ans[cur]!==null)return;ans[cur]=i;render();}
+function go(d){cur=Math.max(0,Math.min(31,cur+d));render();}
+function jmp(i){cur=i;render();}
+
+function results(){
+  const cor=ans.filter((a,i)=>a===Q[i].ans).length, p=Math.round(cor/32*100);
+  const g=p>=90?'Outstanding!':p>=80?'Good — above average':p>=70?'Satisfactory — review weak areas':'Needs improvement';
+  document.getElementById('ra').innerHTML=`<div class="res"><div class="sc">${cor}/32</div><div class="lb">questions correct</div><div class="gr">${p}% — ${g}</div><button onclick="reset()" style="margin-top:1rem;padding:9px 22px;font-size:14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);cursor:pointer;color:var(--color-text-primary)">Retake Quiz</button></div>`;
+}
+
+function reset(){cur=0;ans=new Array(32).fill(null);document.getElementById('ra').innerHTML='';render();}
+
+render();
+</script>
